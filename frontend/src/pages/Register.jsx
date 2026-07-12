@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { User, Lock, ArrowRight, Sparkles, Sprout, CheckCircle, AlertCircle } from 'lucide-react';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = import.meta.env.DEV ? 'http://localhost:5000/api' : 'https://connect-together-vpa6.onrender.com/api';
 
 function Register({ onRegister }) {
   const [authMode, setAuthMode] = useState('login'); // 'login' | 'signup' | 'guest'

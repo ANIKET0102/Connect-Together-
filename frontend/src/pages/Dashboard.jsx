@@ -41,8 +41,8 @@ import {
   User
 } from 'lucide-react';
 
-const API_BASE = 'http://localhost:5000/api';
-const SOCKET_URL = 'http://localhost:5000';
+const API_BASE = import.meta.env.DEV ? 'http://localhost:5000/api' : 'https://connect-together-vpa6.onrender.com/api';
+const SOCKET_URL = import.meta.env.DEV ? 'http://localhost:5000' : 'https://connect-together-vpa6.onrender.com';
 
 // Helper to generate the 365 days ending today, aligned to Sundays
 const getCalendarDays = () => {
