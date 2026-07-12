@@ -38,6 +38,7 @@ app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/rooms', require('./routes/roomRoutes'));
 app.use('/api/tasks', require('./routes/taskRoutes'));
 app.use('/api/applications', require('./routes/applicationRoutes'));
+app.use('/api/visitors', require('./routes/visitorRoutes'));
 
 // Welcome Route
 app.get('/', (req, res) => {

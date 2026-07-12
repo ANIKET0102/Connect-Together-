@@ -14,6 +14,25 @@ function Register({ onRegister }) {
   // Real-time username availability check states (only for 'signup' mode)
   const [usernameAvailable, setUsernameAvailable] = useState(null);
   const [checkingUsername, setCheckingUsername] = useState(false);
+  const [visitorCount, setVisitorCount] = useState(null);
+
+  // Log visit and fetch total visitor count on mount
+  useEffect(() => {
+    const recordVisit = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/visitors/visit`, {
+          method: 'POST',
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          setVisitorCount(data.count);
+        }
+      } catch (err) {
+        console.error('Failed to log visit:', err);
+      }
+    };
+    recordVisit();
+  }, []);
 
   // Debounced check for username availability during signup
   useEffect(() => {
@@ -288,8 +307,8 @@ function Register({ onRegister }) {
           </form>
         </div>
 
-        {/* About Link */}
-        <div className="text-center mt-8 flex justify-center">
+        {/* About Link & Visitor Count */}
+        <div className="text-center mt-8 flex flex-col items-center gap-4">
           <Link
             to="/about"
             className="animate-floating-glow flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 border border-white/10 hover:border-brand-orange/45 text-[10px] sm:text-xs font-bold text-text-light hover:text-white transition-all shadow-md cursor-pointer tracking-wider uppercase backdrop-blur-md"
@@ -297,6 +316,13 @@ function Register({ onRegister }) {
             <Sparkles size={12} className="text-brand-orange animate-pulse" />
             About Project & Developer
           </Link>
+
+          {visitorCount !== null && (
+            <div className="flex items-center gap-2 text-[10px] sm:text-xs font-medium text-text-muted bg-white/5 border border-white/5 px-4 py-1.5 rounded-full shadow-inner">
+              <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-white font-bold">{visitorCount}</span> People use this app
+            </div>
+          )}
         </div>
       </div>
     </div>
