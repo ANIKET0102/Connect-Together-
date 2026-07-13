@@ -197,10 +197,71 @@ const getRoomActivity = async (req, res) => {
   }
 };
 
+// @desc    Get or create a user's personal/default room
+// @route   GET /api/rooms/user/:userId
+// @access  Public
+const getUserRoom = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (!userId) {
+      return res.status(400).json({ success: false, error: 'Please provide a userId' });
+    }
+
+    // Verify user exists
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    // Find any room where this user is a participant
+    let room = await Room.findOne({ participants: userId });
+
+    // If no room exists, create a default room for this user
+    if (!room) {
+      let roomCode;
+      let isUnique = false;
+      let attempts = 0;
+      while (!isUnique && attempts < 10) {
+        roomCode = generateRoomCode();
+        const existingRoom = await Room.findOne({ roomCode: roomCode.toLowerCase() });
+        if (!existingRoom) {
+          isUnique = true;
+        }
+        attempts++;
+      }
+
+      if (!isUnique) {
+        return res.status(500).json({
+          success: false,
+          error: 'Could not generate a unique room code. Please try again.',
+        });
+      }
+
+      room = await Room.create({
+        roomCode: roomCode.toLowerCase(),
+        participants: [userId],
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: room,
+    });
+  } catch (error) {
+    console.error('Error in getUserRoom:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Server Error',
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   createRoom,
   joinRoom,
   getRoomTasks,
   getRoomByCode,
   getRoomActivity,
+  getUserRoom,
 };

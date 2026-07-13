@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import Register from './pages/Register';
-import Lobby from './pages/Lobby';
 import Dashboard from './pages/Dashboard';
 import About from './pages/About';
 
@@ -37,15 +36,15 @@ function App() {
 
   return (
     <HashRouter>
-      <div className="min-h-screen bg-[#0b0c0e] text-white font-sans antialiased selection:bg-brand-orange/30 selection:text-white">
+      <div className="min-h-screen bg-gradient-to-br from-[#fcecef] via-[#f7f3f6] to-[#eff2f6] text-[#1f2937] font-sans antialiased selection:bg-brand-orange/20 selection:text-brand-orange">
         <Routes>
           <Route
             path="/"
-            element={user ? <Navigate to="/lobby" replace /> : <Register onRegister={setUser} />}
+            element={user ? <Navigate to="/dashboard" replace /> : <Register onRegister={setUser} />}
           />
           <Route
-            path="/lobby"
-            element={user ? <Lobby user={user} onLogout={handleLogout} /> : <Navigate to="/" replace />}
+            path="/dashboard"
+            element={user ? <Dashboard user={user} onLogout={handleLogout} /> : <Navigate to="/" replace />}
           />
           <Route
             path="/room/:roomCode"
@@ -58,24 +57,26 @@ function App() {
           position="top-right" 
           toastOptions={{
             style: {
-              background: '#161719',
-              color: '#ffffff',
-              border: '1px solid rgba(255, 255, 255, 0.05)',
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(8px)',
+              color: '#1f2937',
+              border: '1px solid rgba(0, 0, 0, 0.05)',
               borderRadius: '16px',
               fontSize: '13px',
               fontWeight: '600',
               fontFamily: 'Outfit, sans-serif',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.05)',
             },
             success: {
               iconTheme: {
                 primary: '#10b981',
-                secondary: '#0b0c0e',
+                secondary: '#ffffff',
               },
             },
             error: {
               iconTheme: {
-                primary: '#ff5a1f',
-                secondary: '#0b0c0e',
+                primary: '#ff527b',
+                secondary: '#ffffff',
               },
             },
           }}
